@@ -13,7 +13,26 @@ extension UIViewController {
 }
 
 extension UIViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
-  public func presentMediaOptions(withTitle title: String? = nil, mediaTypes: [String] = [kUTTypeImage as String], allowsEditing: Bool = true) {
+  public enum MediaType {
+    case image
+    case video
+    case any
+
+    var typeStrings: [String] {
+      switch self {
+      case .image: return [kUTTypeImage as String]
+      case .video: return [kUTTypeVideo as String]
+      case .any: return [kUTTypeImage as String, kUTTypeVideo as String]
+      }
+    }
+  }
+
+  public func presentMediaOptions(
+    withTitle title: String? = nil,
+    mediaType: MediaType = .image,
+    allowsEditing: Bool = true,
+    delegate: (UIImagePickerControllerDelegate & UINavigationControllerDelegate)? = nil
+  ) {
     if UIImagePickerController.isSourceTypeAvailable(.camera) {
       let optionMenu = UIAlertController(
         title: title,
@@ -35,8 +54,9 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
         handler: { (_) in
           self.presentImagePickerController(
             with: .photoLibrary,
-            mediaTypes: mediaTypes,
-            allowsEditing: allowsEditing
+            mediaTypes: mediaType.typeStrings,
+            allowsEditing: allowsEditing,
+            delegate: delegate
           )
         }
       )
@@ -46,8 +66,9 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
         handler: { (_) in
           self.presentImagePickerController(
             with: .camera,
-            mediaTypes: mediaTypes,
-            allowsEditing: allowsEditing
+            mediaTypes: mediaType.typeStrings,
+            allowsEditing: allowsEditing,
+            delegate: delegate
           )
         }
       )
@@ -59,8 +80,9 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
     } else {
       presentImagePickerController(
         with: .photoLibrary,
-        mediaTypes: mediaTypes,
-        allowsEditing: allowsEditing
+        mediaTypes: mediaType.typeStrings,
+        allowsEditing: allowsEditing,
+        delegate: delegate
       )
     }
   }
@@ -98,10 +120,11 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
   private func presentImagePickerController(
     with sourceType: UIImagePickerController.SourceType,
     mediaTypes: [String],
-    allowsEditing: Bool = false
+    allowsEditing: Bool = true,
+    delegate: (UIImagePickerControllerDelegate & UINavigationControllerDelegate)? = nil
   ) {
     let picker = UIImagePickerController()
-    picker.delegate = self
+    picker.delegate = delegate ?? self
     picker.allowsEditing = allowsEditing
     picker.sourceType = sourceType
     picker.mediaTypes = mediaTypes
