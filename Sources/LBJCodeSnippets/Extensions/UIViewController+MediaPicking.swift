@@ -3,13 +3,13 @@ import UIKit
 
 extension UIViewController {
   @objc
-  public func didPickEditedImage(_ image: UIImage) { }
+  open func didPickEditedImage(_ image: UIImage) { }
 
   @objc
-  public func didPickOriginalImage(_ image: UIImage) { }
+  open func didPickOriginalImage(_ image: UIImage) { }
 
   @objc
-  public func didPickVideo(_ video: URL) { }
+  open func didPickVideo(_ video: URL) { }
 }
 
 extension UIViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
