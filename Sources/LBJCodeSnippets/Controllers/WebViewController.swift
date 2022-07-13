@@ -1,7 +1,7 @@
 import UIKit
 import WebKit
 
-public class WebViewController: UIViewController {
+open class WebViewController: UIViewController {
 
   public let webView: WKWebView = {
     let config = WKWebViewConfiguration()
@@ -24,13 +24,13 @@ public class WebViewController: UIViewController {
 
   // MARK: - View Lifecycles
 
-  public override func loadView() {
+    open override func loadView() {
     view = UIView()
     view.backgroundColor = .white
     addWebView()
   }
 
-  public override func viewDidLoad() {
+    open override func viewDidLoad() {
     super.viewDidLoad()
     loadingIndicator.startAnimating()
     observation = webView.observe(\WKWebView.estimatedProgress, options: .new) { [weak self] _, change in

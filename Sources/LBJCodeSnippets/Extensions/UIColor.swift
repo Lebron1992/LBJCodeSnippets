@@ -1,7 +1,7 @@
 import UIKit
 
 extension UIColor {
-  public static func  RGB(
+  public static func RGB(
     _ r: CGFloat,
     _ g: CGFloat,
     _ b: CGFloat,
@@ -15,7 +15,7 @@ extension UIColor {
     )
   }
 
-  public static func  random() -> UIColor {
+  public static func random() -> UIColor {
     let red: CGFloat = CGFloat(drand48())
     let green: CGFloat = CGFloat(drand48())
     let blue: CGFloat = CGFloat(drand48())
@@ -27,7 +27,7 @@ extension UIColor {
     )
   }
 
-  public static func  hex(_ hexStr: String) -> UIColor {
+  public static func hex(_ hexStr: String) -> UIColor {
     var cString: String = hexStr.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
 
     if cString.hasPrefix("#") {
@@ -47,6 +47,16 @@ extension UIColor {
       blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
       alpha: CGFloat(1.0)
     )
+  }
+
+  public var hexString:String? {
+    if let components = self.cgColor.components {
+      let r = components[0]
+      let g = components[1]
+      let b = components[2]
+      return  String(format: "#%02x%02x%02x", (Int)(r * 255), (Int)(g * 255), (Int)(b * 255))
+    }
+    return nil
   }
 
   public func toImage() -> UIImage? {

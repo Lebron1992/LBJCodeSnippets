@@ -12,7 +12,7 @@ extension UIViewController {
   open func didPickVideo(_ video: URL) { }
 
   @objc
-  open func imagePickerControllerDidCancel() { }
+  open func imagePickerDidCancel(_ picker: UIImagePickerController) { }
 }
 
 extension UIViewController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
@@ -116,7 +116,7 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
   }
 
   public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-    imagePickerControllerDidCancel()
+    imagePickerDidCancel(picker)
   }
 
   private func presentImagePickerController(
