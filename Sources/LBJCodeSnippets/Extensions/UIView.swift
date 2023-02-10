@@ -48,23 +48,28 @@ extension UIView {
         }
     }
 
-    public func setSubviewsTranslatingMasksToConstraints(to value: Bool, except: UIView? = nil) {
-        subviews.forEach { (subview) in
-            if subview === except {
+    public func setSubviewsTranslatingMasksToConstraints(to value: Bool, except exceptedViews: [UIView] = []) {
+        subviews.forEach { subview in
+            if exceptedViews.contains(subview) {
                 return
             }
             subview.translatesAutoresizingMaskIntoConstraints = value
             if subview.subviews.count > 0 {
-                subview.setSubviewsTranslatingMasksToConstraints(to: value, except: except)
+                subview.setSubviewsTranslatingMasksToConstraints(to: value, except: exceptedViews)
             }
         }
     }
 
     // MARK: - Corner
 
-    public func roundCorners(_ corners: CACornerMask, radius: CGFloat) {
-        clipsToBounds = true
-        layer.cornerRadius = radius
-        layer.maskedCorners = corners
+    public func roundCorners(corners: UIRectCorner = .allCorners, radius: CGFloat) {
+        let path = UIBezierPath(
+            roundedRect: bounds,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
+        let mask = CAShapeLayer()
+        mask.path = path.cgPath
+        layer.mask = mask
     }
 }
