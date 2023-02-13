@@ -62,7 +62,7 @@ extension UIView {
 
     // MARK: - Corner
 
-    public func roundCorners(corners: UIRectCorner = .allCorners, radius: CGFloat) {
+    public func roundCorners(_ corners: UIRectCorner = .allCorners, radius: CGFloat) {
         let path = UIBezierPath(
             roundedRect: bounds,
             byRoundingCorners: corners,
