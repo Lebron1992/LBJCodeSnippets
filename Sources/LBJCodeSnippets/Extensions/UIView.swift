@@ -62,6 +62,12 @@ extension UIView {
 
     // MARK: - Corner
 
+    public func roundCorners(_ corners: CACornerMask, radius: CGFloat) {
+        clipsToBounds = true
+        layer.cornerRadius = radius
+        layer.maskedCorners = corners
+    }
+
     public func roundCorners(_ corners: UIRectCorner = .allCorners, radius: CGFloat) {
         let path = UIBezierPath(
             roundedRect: bounds,
