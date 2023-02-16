@@ -32,6 +32,9 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
 
   public func presentMediaOptions(
     withTitle title: String? = nil,
+    libraryActionTitle: String = "Choose from library",
+    cameraActionTitle: String = "Take photo",
+    cancelActionTitle: String = "Cancel",
     mediaType: MediaType = .image,
     allowsEditing: Bool = true,
     delegate: (UIImagePickerControllerDelegate & UINavigationControllerDelegate)? = nil
@@ -52,7 +55,7 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
       optionMenu.popoverPresentationController?.permittedArrowDirections = []
 
       let libraryAction = UIAlertAction(
-        title: "Choose from library",
+        title: libraryActionTitle,
         style: .default,
         handler: { (_) in
           self.presentImagePickerController(
@@ -64,7 +67,7 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
         }
       )
       let cameraAction = UIAlertAction(
-        title: "Take photo",
+        title: cameraActionTitle,
         style: .default,
         handler: { (_) in
           self.presentImagePickerController(
@@ -75,7 +78,7 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
           )
         }
       )
-      let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+      let cancelAction = UIAlertAction(title: cancelActionTitle, style: .cancel, handler: nil)
       optionMenu.addAction(libraryAction)
       optionMenu.addAction(cameraAction)
       optionMenu.addAction(cancelAction)
