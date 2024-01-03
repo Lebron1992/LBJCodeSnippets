@@ -1,10 +1,10 @@
 import UIKit
 
-public final class PaddingLabel: UILabel {
+open class PaddingLabel: UILabel {
 
-  public var contentInset: UIEdgeInsets
+  open var contentInset: UIEdgeInsets
 
-  public required init(frame: CGRect, contentInset: UIEdgeInsets) {
+  public init(frame: CGRect, contentInset: UIEdgeInsets) {
     self.contentInset = contentInset
     super.init(frame: frame)
   }
@@ -14,11 +14,18 @@ public final class PaddingLabel: UILabel {
     super.init(coder: aDecoder)
   }
 
-  public override func drawText(in rect: CGRect) {
+  open override var bounds: CGRect {
+    didSet {
+      // ensures this works within stack views if multi-line
+      preferredMaxLayoutWidth = bounds.width - (contentInset.left + contentInset.right)
+    }
+  }
+
+  open override func drawText(in rect: CGRect) {
     super.drawText(in: rect.inset(by: contentInset))
   }
 
-  public override var intrinsicContentSize: CGSize {
+  open override var intrinsicContentSize: CGSize {
     var contentSize = super.intrinsicContentSize
     contentSize.height += contentInset.top + contentInset.bottom
     contentSize.width += contentInset.left + contentInset.right

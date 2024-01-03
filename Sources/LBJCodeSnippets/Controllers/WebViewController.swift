@@ -3,11 +3,12 @@ import WebKit
 
 open class WebViewController: UIViewController {
 
-  public let webView: WKWebView = {
+  public lazy var webView: WKWebView = {
     let config = WKWebViewConfiguration()
     config.suppressesIncrementalRendering = true
     config.allowsInlineMediaPlayback = true
     let webView = WKWebView(frame: .zero, configuration: config)
+    webView.navigationDelegate = self
     return webView
   }()
   private var observation: NSKeyValueObservation?
@@ -42,6 +43,30 @@ open class WebViewController: UIViewController {
 
   deinit {
     observation = nil
+  }
+}
+
+extension WebViewController: WKNavigationDelegate {
+  public func webView(
+    _ webView: WKWebView,
+    decidePolicyFor navigationAction: WKNavigationAction,
+    decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+  ) {
+    guard
+      let url = navigationAction.request.url,
+      let scheme = url.scheme
+    else {
+      decisionHandler(.cancel)
+      return
+    }
+
+    switch scheme.lowercased() {
+    case "mailto":
+      UIApplication.shared.open(url)
+      decisionHandler(.cancel)
+    default:
+      decisionHandler(.allow)
+    }
   }
 }
 

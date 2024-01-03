@@ -1,6 +1,6 @@
 import UIKit
 
-public class InsetedTextField: UITextField {
+open class InsetedTextField: UITextField {
 
     public var contentInsets: UIEdgeInsets = .init(all: 8) {
         didSet { layoutIfNeeded() }

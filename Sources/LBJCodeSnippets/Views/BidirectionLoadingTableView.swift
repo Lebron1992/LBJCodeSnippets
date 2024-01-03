@@ -48,7 +48,7 @@ public final class BidirectionLoadingTableView: UITableView {
   private var isBottomLoadingFinished = true
   private var contentOffsetObserver: NSKeyValueObservation?
 
-  private lazy var bottomLoadingView: BottomLoadingView = {
+  public lazy var bottomLoadingView: BottomLoadingView = {
     let bv = BottomLoadingView(frame: CGRect(x: 0, y: 0, width: 0, height: 80))
     return bv
   }()
@@ -92,9 +92,9 @@ extension BidirectionLoadingTableView {
 }
 
 // MARK: - Bottom loading
-private final class BottomLoadingView: UIView {
+public final class BottomLoadingView: UIView {
 
-  private var activityView: UIActivityIndicatorView!
+  public var activityView: UIActivityIndicatorView!
 
   override init(frame: CGRect) {
     super.init(frame: frame)

@@ -5,7 +5,7 @@ extension Int {
 
   private typealias Abbrevation = (threshold: Double, divisor: Double, suffix: String)
 
-  public func abbrevation() -> String? {
+  public func abbrevation(maximumFractionDigits: Int = 2) -> String? {
     let abbreviations: [Abbrevation] = [
       (0, 1, ""),
       (1000.0, 1000.0, "K"),
@@ -24,11 +24,22 @@ extension Int {
       formatter.allowsFloats = true
       formatter.minimumIntegerDigits = 1
       formatter.minimumFractionDigits = 0
-      formatter.maximumFractionDigits = 1
+      formatter.maximumFractionDigits = maximumFractionDigits
       return formatter
     }()
 
     let value = Double(self) / abbreviation.divisor
     return numFormatter.string(from: .init(value: value))
+  }
+
+  public var secondsToHoursMinutesSecondsDisplay: String {
+    let hours = self / 3600
+    let mins = (self % 3600) / 60
+    let seconds = (self % 3600) % 60
+    let secondsStr = seconds > 9 ? "\(seconds)" : "0\(seconds)"
+    if hours == 0 {
+      return "\(mins):\(secondsStr)"
+    }
+    return "\(hours):\(mins):\(secondsStr)"
   }
 }
