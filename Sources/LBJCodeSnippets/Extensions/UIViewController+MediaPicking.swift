@@ -21,7 +21,7 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
     case video
     case any
 
-    var typeStrings: [String] {
+    public var typeStrings: [String] {
       switch self {
       case .image: return [kUTTypeImage as String]
       case .video: return [kUTTypeVideo as String]
@@ -80,7 +80,9 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
       )
       let cancelAction = UIAlertAction(title: cancelActionTitle, style: .cancel, handler: nil)
       optionMenu.addAction(libraryAction)
-      optionMenu.addAction(cameraAction)
+      if UIImagePickerController.isSourceTypeAvailable(.camera) {
+        optionMenu.addAction(cameraAction)
+      }
       optionMenu.addAction(cancelAction)
       present(optionMenu, animated: true, completion: nil)
     } else {
@@ -122,7 +124,7 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
     imagePickerDidCancel(picker)
   }
 
-  private func presentImagePickerController(
+  public func presentImagePickerController(
     with sourceType: UIImagePickerController.SourceType,
     mediaTypes: [String],
     allowsEditing: Bool = true,
