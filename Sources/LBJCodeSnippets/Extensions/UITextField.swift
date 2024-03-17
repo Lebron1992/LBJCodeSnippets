@@ -1,7 +1,7 @@
 import UIKit
 
-extension UITextField {
-    public var trimmedText: String? {
-        text?.trimmed
-    }
+public extension UITextField {
+  var trimmedText: String? {
+    text?.trimmed
+  }
 }

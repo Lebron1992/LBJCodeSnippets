@@ -70,3 +70,10 @@ extension UIView {
         }
     }
 }
+
+public extension UIView {
+
+  func disableDragAndDrop() {
+    interactions.removeAll { $0 is UIDragInteraction || $0 is UIDropInteraction }
+  }
+}
