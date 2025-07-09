@@ -99,22 +99,22 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
     _ picker: UIImagePickerController,
     didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
   ) {
-    guard let type = info[UIImagePickerController.InfoKey.mediaType] as? String else {
+    guard let type = info[.mediaType] as? String else {
       return
     }
 
     if type == kUTTypeImage as String {
 
-      if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+      if let originalImage = info[.originalImage] as? UIImage {
         didPickOriginalImage(originalImage)
       }
-      if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+      if let editedImage = info[.editedImage] as? UIImage {
         didPickEditedImage(editedImage)
       }
 
     } else if type == kUTTypeMovie as String ||
                 type == kUTTypeVideo as String,
-              let pickedVideoPath = info[UIImagePickerController.InfoKey.mediaURL] as? URL {
+              let pickedVideoPath = info[.mediaURL] as? URL {
 
       didPickVideo(pickedVideoPath)
     }

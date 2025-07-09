@@ -58,17 +58,17 @@ extension Date {
     calendar.isDate(self, equalTo: date, toGranularity: component)
   }
 
-  public func isInSameYear(as date: Date) -> Bool {
-    isEqual(to: date, toGranularity: .year)
+  public func isInSameYear(as date: Date, in calendar: Calendar = .current) -> Bool {
+    isEqual(to: date, toGranularity: .year, in: calendar)
   }
-  public func isInSameMonth(as date: Date) -> Bool {
-    isEqual(to: date, toGranularity: .month)
+  public func isInSameMonth(as date: Date, in calendar: Calendar = .current) -> Bool {
+    isEqual(to: date, toGranularity: .month, in: calendar)
   }
-  public func isInSameWeek(as date: Date) -> Bool {
-    isEqual(to: date, toGranularity: .weekOfYear)
+  public func isInSameWeek(as date: Date, in calendar: Calendar = .current) -> Bool {
+    isEqual(to: date, toGranularity: .weekOfYear, in: calendar)
   }
-  public func isInSameDay(as date: Date) -> Bool {
-    Calendar.current.isDate(self, inSameDayAs: date)
+  public func isInSameDay(as date: Date, in calendar: Calendar = .current) -> Bool {
+    calendar.isDate(self, inSameDayAs: date)
   }
 
   public var isInThisYear: Bool {

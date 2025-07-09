@@ -1,18 +1,18 @@
 import Foundation
 import StoreKit
 
-typealias ProductsRequestCompletionHandler = (
-  _ success: Bool,
-  _ products: [SKProduct]?
+public typealias ProductsRequestCompletionHandler = (
+  _ products: [SKProduct]?,
+  _ error: Error?
 ) -> Void
 
-typealias ProductPurchaseCompletionHandler = (
+public typealias ProductPurchaseCompletionHandler = (
   _ purchased: Bool,
   _ transaction: SKPaymentTransaction,
   _ error: Error?
 ) -> Void
 
-final class IAPStore: NSObject {
+open class IAPStore: NSObject {
 
   private var productsRequest: SKProductsRequest?
   private var productsRequestCompletionHandler: ProductsRequestCompletionHandler?
@@ -27,7 +27,7 @@ final class IAPStore: NSObject {
 // MARK: - StoreKit API
 extension IAPStore {
 
-  public func requestProducts(identifiers: Set<String>, completionHandler: @escaping ProductsRequestCompletionHandler) {
+  open func requestProducts(identifiers: Set<String>, completionHandler: @escaping ProductsRequestCompletionHandler) {
     productsRequest?.cancel()
     productsRequestCompletionHandler = completionHandler
 
@@ -36,17 +36,17 @@ extension IAPStore {
     productsRequest!.start()
   }
 
-  public func buyProduct(_ product: SKProduct) {
+  open func buyProduct(_ product: SKProduct) {
     print("Buying \(product.productIdentifier)...")
     let payment = SKMutablePayment(product: product)
     SKPaymentQueue.default().add(payment)
   }
 
-  public func completeTransaction(_ completionHandler: @escaping ProductPurchaseCompletionHandler) {
+  open func completeTransaction(_ completionHandler: @escaping ProductPurchaseCompletionHandler) {
     productPurchaseCompletionHandler = completionHandler
   }
 
-  public func finishTransaction(_ transaction: SKPaymentTransaction) {
+  open func finishTransaction(_ transaction: SKPaymentTransaction) {
     SKPaymentQueue.default().finishTransaction(transaction)
   }
 }
@@ -54,9 +54,9 @@ extension IAPStore {
 // MARK: - SKProductsRequestDelegate
 extension IAPStore: SKProductsRequestDelegate {
 
-  func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
+  public func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
     let products = response.products
-    productsRequestCompletionHandler?(true, products)
+    productsRequestCompletionHandler?(products, nil)
     clearRequestAndHandler()
 
     for p in products {
@@ -67,9 +67,9 @@ extension IAPStore: SKProductsRequestDelegate {
     }
   }
 
-  func request(_ request: SKRequest, didFailWithError error: Error) {
+  public func request(_ request: SKRequest, didFailWithError error: Error) {
     print("Failed to load list of products: \(error)")
-    productsRequestCompletionHandler?(false, nil)
+    productsRequestCompletionHandler?(nil, error)
     clearRequestAndHandler()
   }
 
@@ -81,7 +81,7 @@ extension IAPStore: SKProductsRequestDelegate {
 
 // MARK: - SKPaymentTransactionObserver
 extension IAPStore: SKPaymentTransactionObserver {
-  func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+  public func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
     for transaction in transactions {
       switch transaction.transactionState {
       case .purchased, .restored:
