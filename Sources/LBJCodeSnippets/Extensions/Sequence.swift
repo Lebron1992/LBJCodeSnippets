@@ -16,3 +16,13 @@ public extension Sequence where Iterator.Element == NSAttributedString {
     joined(with: NSAttributedString(string: separator))
   }
 }
+
+public extension Sequence {
+  func removingDuplicates<T: Hashable>(withSame keyPath: KeyPath<Element, T>) -> [Element] {
+    var seen = Set<T>()
+    return filter { element in
+      guard seen.insert(element[keyPath: keyPath]).inserted else { return false }
+      return true
+    }
+  }
+}

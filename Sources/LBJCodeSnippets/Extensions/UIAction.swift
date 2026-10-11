@@ -16,6 +16,7 @@ public extension UIAction {
       handler: handler
     )
   }
+
   static func delete(title: String = "删除", image: UIImage? = .init(systemName: "trash"), handler: @escaping UIActionHandler) -> UIAction {
     UIAction(
       title: title,

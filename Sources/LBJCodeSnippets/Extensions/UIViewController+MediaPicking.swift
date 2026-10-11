@@ -39,12 +39,32 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
     allowsEditing: Bool = true,
     delegate: (UIImagePickerControllerDelegate & UINavigationControllerDelegate)? = nil
   ) {
-    if UIImagePickerController.isSourceTypeAvailable(.camera) {
-      let optionMenu = UIAlertController(
-        title: title,
-        message: "",
-        preferredStyle: .actionSheet
+    guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+      presentImagePickerController(
+        with: .photoLibrary,
+        mediaTypes: mediaType.typeStrings,
+        allowsEditing: allowsEditing,
+        delegate: delegate
       )
+      return
+    }
+
+    // iOS 26+ presents `.actionSheet` as a popover (no animation, cancel hidden).
+    // Use `.alert` so cancel remains visible and presentation animates normally.
+    let preferredStyle: UIAlertController.Style
+    if #available(iOS 26, *) {
+      preferredStyle = .alert
+    } else {
+      preferredStyle = .actionSheet
+    }
+
+    let optionMenu = UIAlertController(
+      title: title,
+      message: preferredStyle == .alert ? nil : "",
+      preferredStyle: preferredStyle
+    )
+
+    if preferredStyle == .actionSheet {
       optionMenu.popoverPresentationController?.sourceView = view
       optionMenu.popoverPresentationController?.sourceRect = CGRect(
         x: view.bounds.midX,
@@ -53,46 +73,37 @@ extension UIViewController: UIImagePickerControllerDelegate & UINavigationContro
         height: 0
       )
       optionMenu.popoverPresentationController?.permittedArrowDirections = []
-
-      let libraryAction = UIAlertAction(
-        title: libraryActionTitle,
-        style: .default,
-        handler: { (_) in
-          self.presentImagePickerController(
-            with: .photoLibrary,
-            mediaTypes: mediaType.typeStrings,
-            allowsEditing: allowsEditing,
-            delegate: delegate
-          )
-        }
-      )
-      let cameraAction = UIAlertAction(
-        title: cameraActionTitle,
-        style: .default,
-        handler: { (_) in
-          self.presentImagePickerController(
-            with: .camera,
-            mediaTypes: mediaType.typeStrings,
-            allowsEditing: allowsEditing,
-            delegate: delegate
-          )
-        }
-      )
-      let cancelAction = UIAlertAction(title: cancelActionTitle, style: .cancel, handler: nil)
-      optionMenu.addAction(libraryAction)
-      if UIImagePickerController.isSourceTypeAvailable(.camera) {
-        optionMenu.addAction(cameraAction)
-      }
-      optionMenu.addAction(cancelAction)
-      present(optionMenu, animated: true, completion: nil)
-    } else {
-      presentImagePickerController(
-        with: .photoLibrary,
-        mediaTypes: mediaType.typeStrings,
-        allowsEditing: allowsEditing,
-        delegate: delegate
-      )
     }
+
+    let libraryAction = UIAlertAction(
+      title: libraryActionTitle,
+      style: .default,
+      handler: { (_) in
+        self.presentImagePickerController(
+          with: .photoLibrary,
+          mediaTypes: mediaType.typeStrings,
+          allowsEditing: allowsEditing,
+          delegate: delegate
+        )
+      }
+    )
+    let cameraAction = UIAlertAction(
+      title: cameraActionTitle,
+      style: .default,
+      handler: { (_) in
+        self.presentImagePickerController(
+          with: .camera,
+          mediaTypes: mediaType.typeStrings,
+          allowsEditing: allowsEditing,
+          delegate: delegate
+        )
+      }
+    )
+    let cancelAction = UIAlertAction(title: cancelActionTitle, style: .cancel, handler: nil)
+    optionMenu.addAction(libraryAction)
+    optionMenu.addAction(cameraAction)
+    optionMenu.addAction(cancelAction)
+    present(optionMenu, animated: true, completion: nil)
   }
 
   public func imagePickerController(
